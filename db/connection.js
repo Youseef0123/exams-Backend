@@ -16,7 +16,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-// for
+// formpom
 
 export const connectDb = async () => {
   try {
