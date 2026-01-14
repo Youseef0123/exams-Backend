@@ -16,7 +16,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-// for production
+// for
 
 export const connectDb = async () => {
   try {
