@@ -16,8 +16,6 @@ export const sequelize = new Sequelize(
   }
 );
 
-// formpom  productionbnnn
-
 export const connectDb = async () => {
   try {
     await sequelize.authenticate();
