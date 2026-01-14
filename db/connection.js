@@ -16,7 +16,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-// formpom  production
+// formpom  productionbnnn
 
 export const connectDb = async () => {
   try {
