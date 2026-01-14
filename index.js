@@ -13,8 +13,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 connectDb();
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
+app.use((err, req, res, next) => {
+  console.error(err); // هيتطبع كل خطأ على Logs
+  res.status(err.statusCode || 500).json({
+    status: "error",
+    message: err.message,
+    stack: err.stack, // مؤقت للـ debug
+  });
 });
 
 // routes
