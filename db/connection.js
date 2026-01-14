@@ -16,7 +16,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-// for production with SSL
+// for production
 
 export const connectDb = async () => {
   try {
