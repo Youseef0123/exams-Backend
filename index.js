@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { connectDb } from "./db/connection.js";
 import globalError from "./src/utils/globalError.js";
 import UserRouter from "./src/modules/user/user.route.js";
@@ -10,15 +11,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 connectDb();
 
 app.use((err, req, res, next) => {
-  console.error(err); // هيتطبع كل خطأ على Logs
+  console.error(err);
   res.status(err.statusCode || 500).json({
     status: "error",
     message: err.message,
-    stack: err.stack, // مؤقت للـ debug
+    stack: err.stack, 
   });
 });
 
