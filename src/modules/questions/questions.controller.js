@@ -19,7 +19,7 @@ export const createQuestion = catchAsyncError(async (req, res, next) => {
 });
 
 // get all questions
-
+// for test
 export const getAllQuestions = catchAsyncError(async (req, res, next) => {
   const questions = await QuestionSchema.findAll({
     order: [["createdAt", "DESC"]],
