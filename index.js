@@ -1,12 +1,14 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import { connectDb } from "./db/connection.js";
 import globalError from "./src/utils/globalError.js";
 import UserRouter from "./src/modules/user/user.route.js";
 import AppError from "./src/utils/AppError.js";
 import QuestionRouter from "./src/modules/questions/questions.route.js";
-dotenv.config();
+import otpRouter from "./src/modules/otp/otp.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +29,7 @@ app.use((err, req, res, next) => {
 // routes
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/questions", QuestionRouter);
+app.use("/api/v1", otpRouter);
 
 // Handle undefined routes
 app.use((req, res, next) => {
