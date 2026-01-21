@@ -23,6 +23,17 @@ const UserSchema = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    Institution:{
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null,
+
+    },
+    bio:{
+     type:DataTypes.TEXT,
+     allowNull:true,
+     defaultValue:null,
+    },
     role: {
       type: DataTypes.ENUM("teacher", "user"),
       defaultValue: "user",

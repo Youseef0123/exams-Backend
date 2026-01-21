@@ -1,5 +1,5 @@
 const validateSignup = (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, Institution, bio } = req.body;
   const errors = [];
 
   if (!name || name.trim().length < 3) {
@@ -16,6 +16,14 @@ const validateSignup = (req, res, next) => {
 
   if (role && !["teacher", "user"].includes(role)) {
     errors.push("Role must be either 'teacher' or 'user'.");
+  }
+
+  if (Institution && Institution.trim().length < 2) {
+    errors.push("Institution must be at least 2 characters long if provided.");
+  }
+
+  if (bio && bio.trim().length < 10) {
+    errors.push("Bio must be at least 10 characters long if provided.");
   }
 
   if (errors.length > 0) {
@@ -48,4 +56,33 @@ const validateLogin = (req, res, next) => {
   next();
 };
 
-export { validateSignup, validateLogin };
+const validateUpdateProfile = (req, res, next) => {
+  const { name, Institution, bio ,email } = req.body;
+  const errors = [];
+
+  if (name && name.trim().length < 3) {
+    errors.push("Name must be at least 3 characters long.");
+  }
+
+  if (Institution && Institution.trim().length < 2) {
+    errors.push("Institution must be at least 2 characters long if provided.");
+  }
+
+  if (bio && bio.trim().length < 10) {
+    errors.push("Bio must be at least 10 characters long if provided.");
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errors.push("Invalid email format.");
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      status: "fail",
+      errors,
+    });
+  }
+
+  next();
+};
+
+export { validateSignup, validateLogin, validateUpdateProfile };

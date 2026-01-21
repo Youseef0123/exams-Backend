@@ -23,7 +23,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 export const signup = catchAsyncError(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, Institution, bio } = req.body;
 
   const existingUser = await UserSchema.findOne({ where: { email } });
   if (existingUser) {
@@ -35,6 +35,8 @@ export const signup = catchAsyncError(async (req, res, next) => {
     email,
     password,
     role: role || "user",
+    Institution,
+    bio,
   });
   createSendToken(newUser, 201, res);
 });
@@ -85,5 +87,38 @@ export const getMe = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: { user },
+  });
+});
+
+export const updateProfile = catchAsyncError(async (req, res, next) => {
+  const { name, Institution, bio, email } = req.body;
+
+  const user = await UserSchema.findByPk(req.user.id);
+
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
+  if (email && email !== user.email) {
+    const existingUser = await UserSchema.findOne({ where: { email } });
+    if (existingUser) {
+      return next(new AppError("Email already in use", 400));
+    }
+    user.email = email;
+  }
+
+  if (name) user.name = name;
+  if (Institution) user.Institution = Institution;
+  if (bio) user.bio = bio;
+
+  await user.save();
+
+  user.password = undefined;
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      user,
+    },
   });
 });

@@ -9,7 +9,7 @@ import UserRouter from "./src/modules/user/user.route.js";
 import AppError from "./src/utils/AppError.js";
 import QuestionRouter from "./src/modules/questions/questions.route.js";
 import otpRouter from "./src/modules/otp/otp.route.js";
-
+import QuizRouter from "./src/modules/quiz/quiz.route.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -30,6 +30,7 @@ app.use((err, req, res, next) => {
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/questions", QuestionRouter);
 app.use("/api/v1", otpRouter);
+app.use("/api/v1/quizzes", QuizRouter);
 
 // Handle undefined routes
 app.use((req, res, next) => {
