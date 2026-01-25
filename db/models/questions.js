@@ -29,7 +29,6 @@ const QuestionSchema = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     subject: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -5,8 +5,9 @@ import {
   login,
   signup,
   getMe,
+  updateProfile,
 } from "./user.controller.js";
-import { validateLogin, validateSignup } from "./user.validation.js";
+import { validateLogin, validateSignup, validateUpdateProfile } from "./user.validation.js";
 import { protect, restrictTo } from "../../middleware/auth.js";
 
 const UserRouter = Router();
@@ -16,7 +17,8 @@ UserRouter.post("/login", validateLogin, login);
 
 UserRouter.use(protect);
 
-UserRouter.get("/me", getMe);
+UserRouter.get("/profile", getMe);
+UserRouter.put("/profile", validateUpdateProfile, updateProfile);
 UserRouter.get("/all-users", restrictTo("teacher"), getAllUsers);
 UserRouter.get("/:id", restrictTo("teacher"), getUser);
 
