@@ -1,12 +1,15 @@
-import { catchAsyncError } from "../handlers/handelAsyncError.js";
+import jwt from "jsonwebtoken";
+import UserSchema from "../../db/models/user.js";
+import AppError from "../utils/AppError.js";
+import catchAsyncError from "../handlers/handelAsyncError.js";
 
-export const protect = catchAsyncError(async (req, resizeBy, next) => {
+export const protect = catchAsyncError(async (req, res, next) => {
   // get token from headers
 
   let token;
   if (
     req.headers.authorization &&
-    req.headers.authorization.startWith("Bearer")
+    req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
   }

@@ -5,7 +5,7 @@ import catchAsyncError from "../../handlers/handelAsyncError.js";
 
 // create quiz
 export const createQuiz= catchAsyncError(async(req,res ,next)=>{
-  const {title,description,timeLimit,questions} = req.body;
+  const {title,description,timeLimit,questions, DeadLine} = req.body;
 
   const newQuiz =await QuizSchema.create({
     title,
@@ -13,6 +13,8 @@ export const createQuiz= catchAsyncError(async(req,res ,next)=>{
     timeLimit,
     questions,
     userId: req.user.id,
+    DeadLine: DeadLine
+
 
   })
 
@@ -33,7 +35,7 @@ export const createQuiz= catchAsyncError(async(req,res ,next)=>{
 export const getAllQuizzes = catchAsyncError(async(req, res ,next)=>{
   const quizzes = await QuizSchema.findAll({
     where:{userId: req.user.id},
-    attributes:['id','title','description','timeLimit','published','createdAt','questions'],
+    attributes:['id','title','description','timeLimit','published','averageScoreNumber','NumberOfStudent','createdAt','questions'],
     order:[['id','ASC']]
   })
 
@@ -171,3 +173,4 @@ export const togglePublish = catchAsyncError(async(req,res,next)=>{
     data:{quiz}
   })
 })
+

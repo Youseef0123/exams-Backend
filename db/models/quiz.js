@@ -19,7 +19,7 @@ const QuizSchema = sequelize.define('Quiz', {
     timeLimit: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 20 // in minutes,
     },
     userId: {
         type: DataTypes.INTEGER,
@@ -38,6 +38,27 @@ const QuizSchema = sequelize.define('Quiz', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
+    averageScoreNumber:{
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
+        validate:{
+            min:0,
+            max:100
+        }
+    },
+    NumberOfStudent:{
+        type: DataTypes.INTEGER,
+        defaultValue:0
+    },
+   DeadLine:{
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: () => {
+        const date = new Date();
+        date.setDate(date.getDate() +3);
+        return date;
+    }
+},
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
