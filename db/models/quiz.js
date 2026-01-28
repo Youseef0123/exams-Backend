@@ -79,3 +79,6 @@ QuizSchema.belongsTo(UserSchema, { foreignKey: 'userId' });
 UserSchema.hasMany(QuizSchema, { foreignKey: 'userId' });
 
 export default QuizSchema;
+
+
+// for production update
