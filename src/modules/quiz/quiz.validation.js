@@ -1,7 +1,9 @@
 
 
+import { QUIZ_CATEGORIES } from '../../utils/quizCategories.js';
+
 const validateCreateQuiz=(req,res,next)=>{
-    const {title,description,timeLimit,questions} = req.body;
+    const {title,description,subjects,timeLimit,questions} = req.body;
     const errors = [];
 
 
@@ -13,6 +15,12 @@ const validateCreateQuiz=(req,res,next)=>{
 
     if(!description || description.trim().length<10){
         errors.push("Description is required and should be at least 10 characters long.");
+    }
+
+    if(!subjects || typeof subjects !== 'string' || subjects.trim().length < 2){
+        errors.push("Subject is required and should be at least 2 characters long.");
+    } else if (!QUIZ_CATEGORIES.includes(subjects.trim())) {
+        errors.push(`Subject must be one of the following: ${QUIZ_CATEGORIES.join(', ')}`);
     }
 
     if(!timeLimit || timeLimit<=0){
@@ -58,7 +66,7 @@ const validateCreateQuiz=(req,res,next)=>{
 
 
 const validateUpdateQuiz=(req,res,next)=>{
-    const {title,description,timeLimit,questions} = req.body;
+    const {title,description,subjects,timeLimit,questions} = req.body;
     const errors = [];
 
 
@@ -70,6 +78,12 @@ const validateUpdateQuiz=(req,res,next)=>{
 
     if(!description || description.trim().length<10){
         errors.push("Description is required and should be at least 10 characters long.");
+    }
+
+    if(!subjects || typeof subjects !== 'string' || subjects.trim().length < 2){
+        errors.push("Subject is required and should be at least 2 characters long.");
+    } else if (!QUIZ_CATEGORIES.includes(subjects.trim())) {
+        errors.push(`Subject must be one of the following: ${QUIZ_CATEGORIES.join(', ')}`);
     }
 
     if(!timeLimit || timeLimit<=0){

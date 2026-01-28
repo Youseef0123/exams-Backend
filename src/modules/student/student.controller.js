@@ -292,12 +292,47 @@ export const getUpcomingDeadlines= catchAsyncError(async(req,res,next)=>{
     }
 
 
+});
+
+
+
+// get completed quizzes for student
+export const getCompletedQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
+    const attempts = await QuizAttemptSchema.findAll({
+        where: {
+            userId: req.user.id,
+            submittedAt: { [Op.ne]: null }
+        },
+        include: [{
+            model: QuizSchema,
+            attributes: ['title', 'subjects']
+        }],
+        attributes: ['submittedAt', 'score'],
+        order: [['submittedAt', 'DESC']]
+    });
+
+    const completedQuizzes = attempts.map(attempt => ({
+        title: attempt.Quiz.title,
+        subjects: attempt.Quiz.subjects,
+        dateCompleted: attempt.submittedAt,
+        score: attempt.score
+    }));
+
+    const totalQuizzes = completedQuizzes.length;
+    const highestScore = completedQuizzes.length > 0 ? Math.max(...completedQuizzes.map(q => q.score)) : 0;
+    const averageScore = completedQuizzes.length > 0 ? completedQuizzes.reduce((sum, q) => sum + q.score, 0) / completedQuizzes.length : 0;
+
     res.status(200).json({
-        status:'success',
-        results: quizzes.length,
-        data:{quizzes}
-    })
+        status: 'success',
+        results: completedQuizzes.length,
+        data: {
+            completedQuizzes,
+            totalQuizzes,
+            highestScore,
+            averageScore: parseFloat(averageScore.toFixed(2))
+        }
+    });
+});
 
 
 
-})

@@ -122,3 +122,10 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
     },
   });
 });
+
+export const logout = catchAsyncError(async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
+});
