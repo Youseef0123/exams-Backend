@@ -16,6 +16,11 @@ const QuizSchema = sequelize.define('Quiz', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    subjects: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'General'
+    },
     timeLimit: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -1,5 +1,5 @@
 import {Router} from "express"
-import {submitQuiz,getAllQuizzesForStudent,startQuizForStudent ,getStudentAnalytics,getUpcomingDeadlines} from "./student.controller.js"
+import {submitQuiz,getAllQuizzesForStudent,startQuizForStudent ,getStudentAnalytics,getUpcomingDeadlines, getCompletedQuizzesForStudent} from "./student.controller.js"
 import {protect, restrictTo} from "../../middleware/auth.js"
 import { validateSubmitQuiz } from "./student.validation.js";
 
@@ -27,5 +27,8 @@ StudentRouter.get("/dashboard",restrictTo('user'),getStudentAnalytics);
 
 // get upcoming deadlines for student
 StudentRouter.get("/upcoming-quizzes",restrictTo('user'),getUpcomingDeadlines);
+
+// get completed quizzes for student
+StudentRouter.get("/results",restrictTo('user'),getCompletedQuizzesForStudent);
 
 export default StudentRouter;

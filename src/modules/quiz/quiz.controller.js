@@ -1,15 +1,17 @@
 import QuizSchema from "../../../db/models/quiz.js";
 import AppError from "../../utils/AppError.js";
 import catchAsyncError from "../../handlers/handelAsyncError.js";
+import { QUIZ_CATEGORIES } from "../../utils/quizCategories.js";
 
 
 // create quiz
 export const createQuiz= catchAsyncError(async(req,res ,next)=>{
-  const {title,description,timeLimit,questions, DeadLine} = req.body;
+  const {title,description,subjects,timeLimit,questions, DeadLine} = req.body;
 
   const newQuiz =await QuizSchema.create({
     title,
     description,
+    subjects,
     timeLimit,
     questions,
     userId: req.user.id,
@@ -35,7 +37,7 @@ export const createQuiz= catchAsyncError(async(req,res ,next)=>{
 export const getAllQuizzes = catchAsyncError(async(req, res ,next)=>{
   const quizzes = await QuizSchema.findAll({
     where:{userId: req.user.id},
-    attributes:['id','title','description','timeLimit','published','averageScoreNumber','NumberOfStudent','createdAt','questions'],
+    attributes:['id','title','description','subjects','timeLimit','published','averageScoreNumber','NumberOfStudent','createdAt','questions'],
     order:[['id','ASC']]
   })
 
@@ -99,9 +101,10 @@ export const updateQuiz= catchAsyncError(async(req,res, next)=>{
     return next(new AppError('No quiz found with that ID or not owned by you', 404));
   }
 
-  const {title,description,timeLimit,questions} = req.body;
+  const {title,description,subjects,timeLimit,questions} = req.body;
   quiz.title= title || quiz.title;
   quiz.description= description || quiz.description;
+  quiz.subjects= subjects || quiz.subjects;
   quiz.timeLimit= timeLimit || quiz.timeLimit;
   quiz.questions= questions || quiz.questions;
   await quiz.save();
@@ -140,6 +143,17 @@ export const deleteQuiz = catchAsyncError(async(req,res,next)=>{
     message: 'Quiz deleted successfully',
     })
 })
+
+// get all available quiz categories
+export const getQuizCategories = catchAsyncError(async(req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    results: QUIZ_CATEGORIES.length,
+    data: {
+      categories: QUIZ_CATEGORIES
+    }
+  });
+});
 
 // make quiz published or unpublished
 export const togglePublish = catchAsyncError(async(req,res,next)=>{
