@@ -322,6 +322,10 @@ export const getCompletedQuizzesForStudent = catchAsyncError(async(req,res,next)
     const highestScore = completedQuizzes.length > 0 ? Math.max(...completedQuizzes.map(q => q.score)) : 0;
     const averageScore = completedQuizzes.length > 0 ? completedQuizzes.reduce((sum, q) => sum + q.score, 0) / completedQuizzes.length : 0;
 
+    // Extract last quiz and best result
+    const lastQuiz = completedQuizzes.length > 0 ? completedQuizzes[0] : null;
+    const bestResult = highestScore;
+
     res.status(200).json({
         status: 'success',
         results: completedQuizzes.length,
@@ -329,7 +333,9 @@ export const getCompletedQuizzesForStudent = catchAsyncError(async(req,res,next)
             completedQuizzes,
             totalQuizzes,
             highestScore,
-            averageScore: parseFloat(averageScore.toFixed(2))
+            averageScore: parseFloat(averageScore.toFixed(2)),
+            lastQuiz,
+            bestResult
         }
     });
 });
