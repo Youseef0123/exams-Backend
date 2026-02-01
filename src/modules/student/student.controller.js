@@ -11,7 +11,7 @@ import { Op, Sequelize } from 'sequelize';
 export const getAllQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
     const quizzes = await QuizSchema.findAll({
         where:{published:true},
-        attributes:['id','title','description','timeLimit','questions','createdAt'],
+        attributes:['id','title','description','timeLimit','questions','createdAt','subject'],
         order:[['createdAt','DESC']]
     });
 
