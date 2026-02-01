@@ -15,8 +15,13 @@ export const getAllQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
         order:[['createdAt','DESC']]
     });
 
+    const numberOfquestionsinQuiz =0;
+
+
     if(quizzes.length>0 && typeof quizzes[0].questions==='string'){
         quizzes.forEach(quiz=>{
+            numberOfquestionsinQuiz++;
+
             quiz.questions=JSON.parse(quiz.questions);
             // Add id to questions if not present
             quiz.questions.forEach((q, index) => {
@@ -31,7 +36,8 @@ export const getAllQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
         status:'success',
         results:quizzes.length,
         data:{
-            quizzes
+            quizzes,
+            numberOfquestionsinQuiz
         }
     })
 })
