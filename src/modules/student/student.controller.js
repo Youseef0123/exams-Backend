@@ -108,7 +108,7 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
 
     const quiz = await QuizSchema.findOne({
         where:{id:quizId,published:true},
-        attributes:['id','title','description','timeLimit','questions','createdAt'],
+        attributes:['id','title','description','timeLimit','questions','createdAt','subjects'],
     })
 
     if(!quiz){
@@ -193,7 +193,8 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
             grade,
             wrongAnswers,
             timeTaken,
-            timeLimit:quiz.timeLimit
+            timeLimit:quiz.timeLimit,
+            subjects: quiz.subjects
         }
     })
 
