@@ -29,6 +29,15 @@ export const getAllQuizzesForStudent= catchAsyncError(async(req,res,next)=>{
         }
     });
 
+    // Get total unique students
+    const totalStudents = await QuizAttemptSchema.count({
+        where: {
+            quizId: quizIds
+        },
+        distinct: true,
+        col: 'userId'
+    });
+
     // Get average score from all attempts
     const attempts = await QuizAttemptSchema.findAll({
         where: {
@@ -42,7 +51,7 @@ export const getAllQuizzesForStudent= catchAsyncError(async(req,res,next)=>{
     const averageScore = attempts.length > 0 ? totalScore / attempts.length : 0;
     const totalQuizzes = quizzesCreated.length;
     const activeQuizzes = quizzesCreated.filter(quiz => quiz.published).length;
-    const totalStudents = attemptsCount;
+    const totalSubmissions = attemptsCount;
 
     // Analytics per subject
     const subjects = [...new Set(quizzesCreated.map(quiz => quiz.subjects))];
@@ -63,14 +72,19 @@ export const getAllQuizzesForStudent= catchAsyncError(async(req,res,next)=>{
         });
     }
 
+    // Find the most popular subject
+    const mostPopularSubject = subjectAnalytics.length > 0 ? subjectAnalytics.reduce((max, current) => current.studentCount > max.studentCount ? current : max) : null;
+
     res.status(200).json({
         status:'success',
         data:{
             totalQuizzes,
             activeQuizzes,
             totalStudents,
+            totalSubmissions,
             averageScore: parseFloat(averageScore.toFixed(2)),
-            subjectAnalytics
+            subjectAnalytics,
+            mostPopularSubject
         }
     })
 
