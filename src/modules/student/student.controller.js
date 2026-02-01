@@ -166,7 +166,8 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
     const grade = score >= 80 ? 'A' : score >= 60 ? 'B' : score >= 40 ? 'C' : 'F';
      
     const newNumberOfStudent=quiz.NumberOfStudent+1;
-    const newAverageScore=((quiz.averageScoreNumber * quiz.NumberOfStudent) + score) / newNumberOfStudent;
+    const currentAverage = quiz.averageScoreNumber || 0;
+    const newAverageScore=((currentAverage * quiz.NumberOfStudent) + score) / newNumberOfStudent;
 
     await QuizSchema.update({
         averageScoreNumber:newAverageScore,
