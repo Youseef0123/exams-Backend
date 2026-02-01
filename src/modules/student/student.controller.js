@@ -108,7 +108,7 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
 
     const quiz = await QuizSchema.findOne({
         where:{id:quizId,published:true},
-        attributes:['id','title','description','timeLimit','questions','createdAt','subjects'],
+        attributes:['id','title','description','timeLimit','questions','createdAt','subjects','NumberOfStudent','averageScoreNumber'],
     })
 
     if(!quiz){
@@ -165,9 +165,10 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
     const score=totalQuestions>0 ? parseFloat(((correctCount/totalQuestions)*100).toFixed(1)) : 0;
     const grade = score >= 80 ? 'A' : score >= 60 ? 'B' : score >= 40 ? 'C' : 'F';
      
-    const newNumberOfStudent=quiz.NumberOfStudent+1;
+    const currentNumberOfStudent = quiz.NumberOfStudent || 0;
+    const newNumberOfStudent = currentNumberOfStudent + 1;
     const currentAverage = quiz.averageScoreNumber || 0;
-    const newAverageScore=((currentAverage * quiz.NumberOfStudent) + score) / newNumberOfStudent;
+    const newAverageScore = ((currentAverage * currentNumberOfStudent) + score) / newNumberOfStudent;
 
     await QuizSchema.update({
         averageScoreNumber:newAverageScore,
