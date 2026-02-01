@@ -11,7 +11,7 @@ import { Op, Sequelize } from 'sequelize';
 export const getAllQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
     const quizzes = await QuizSchema.findAll({
         where:{published:true},
-        attributes:['id','title','description','timeLimit','questions','createdAt','subjects','DeadLine'],
+        attributes:['id','title','description','timeLimit','questions','questionCount','createdAt','subjects','DeadLine'],
         order:[['createdAt','DESC']]
     });
 
@@ -29,10 +29,6 @@ export const getAllQuizzesForStudent = catchAsyncError(async(req,res,next)=>{
         });
     }
     
-    // Add question count for all quizzes
-    quizzes.forEach(quiz => {
-        quiz.questionCount = quiz.questions.length;
-    });
     
     res.status(200).json({
         status:'success',

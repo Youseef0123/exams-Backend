@@ -55,7 +55,7 @@ const QuizSchema = sequelize.define('Quiz', {
         type: DataTypes.INTEGER,
         defaultValue:0
     },
-   DeadLine:{
+    DeadLine:{
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: () => {
@@ -64,6 +64,12 @@ const QuizSchema = sequelize.define('Quiz', {
         return date;
     }
 },
+    questionCount: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return this.questions ? this.questions.length : 0;
+        }
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

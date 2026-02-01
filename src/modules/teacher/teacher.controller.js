@@ -16,7 +16,8 @@ export const getAllQuizzesForStudent= catchAsyncError(async(req,res,next)=>{
             'id',
             'published',
             'NumberOfStudent',
-            'averageScoreNumber'
+            'averageScoreNumber',
+            'subjects'
         ]
     });
 
@@ -43,13 +44,33 @@ export const getAllQuizzesForStudent= catchAsyncError(async(req,res,next)=>{
     const activeQuizzes = quizzesCreated.filter(quiz => quiz.published).length;
     const totalStudents = attemptsCount;
 
+    // Analytics per subject
+    const subjects = [...new Set(quizzesCreated.map(quiz => quiz.subjects))];
+    const subjectAnalytics = [];
+
+    for (const subject of subjects) {
+        const quizIdsForSubject = quizzesCreated.filter(quiz => quiz.subjects === subject).map(quiz => quiz.id);
+        const studentCount = await QuizAttemptSchema.count({
+            where: {
+                quizId: quizIdsForSubject
+            },
+            distinct: true,
+            col: 'userId'
+        });
+        subjectAnalytics.push({
+            subject,
+            studentCount
+        });
+    }
+
     res.status(200).json({
         status:'success',
         data:{
             totalQuizzes,
             activeQuizzes,
             totalStudents,
-            averageScore: parseFloat(averageScore.toFixed(2))
+            averageScore: parseFloat(averageScore.toFixed(2)),
+            subjectAnalytics
         }
     })
 
