@@ -73,8 +73,16 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
     }
   })
 
-   if (!otpRecord || otpRecord.expiredAt < new Date()) {
-    return next(new AppError("Invalid or expired OTP", 400));
+  if (!otpRecord) {
+    return next(new AppError("Invalid OTP", 400));
+  }
+
+  // Use timestamps for comparison to avoid timezone issues
+  const now = Date.now();
+  const expiredTime = new Date(otpRecord.expiredAt).getTime();
+  
+  if (expiredTime < now) {
+    return next(new AppError("OTP has expired", 400));
   }
 
    otpRecord.verified = true;
