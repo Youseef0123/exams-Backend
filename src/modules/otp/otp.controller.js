@@ -25,6 +25,14 @@ export const forgotPassword = catchAsyncError(async (req, res, next) => {
     return next(new AppError("User with this email does not exist", 404));
   }
 
+  // Delete any existing unverified OTPs for this user
+  await OTP.destroy({
+    where: {
+      userId: user.id,
+      verified: false,
+    }
+  });
+
   // const otpCode = generateOTP();
   const otpCode = "123456"; // Fixed OTP for testing
   const expiredAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
@@ -70,7 +78,8 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
       userId:user.id,
       code:otp,
       verified:false,
-    }
+    },
+    order: [['createdAt', 'DESC']] // Get the most recent OTP
   })
 
   if (!otpRecord) {
@@ -80,6 +89,11 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
   // Use timestamps for comparison to avoid timezone issues
   const now = Date.now();
   const expiredTime = new Date(otpRecord.expiredAt).getTime();
+  
+  // Add debug logging (remove after testing)
+  console.log('Current time:', new Date(now).toISOString());
+  console.log('OTP expires at:', new Date(expiredTime).toISOString());
+  console.log('Time difference (minutes):', (expiredTime - now) / 1000 / 60);
   
   if (expiredTime < now) {
     return next(new AppError("OTP has expired", 400));
