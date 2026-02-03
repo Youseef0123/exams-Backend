@@ -90,11 +90,6 @@ export const verifyOTP = catchAsyncError(async(req,res,next)=>{
   const now = Date.now();
   const expiredTime = new Date(otpRecord.expiredAt).getTime();
   
-  // Add debug logging (remove after testing)
-  console.log('Current time:', new Date(now).toISOString());
-  console.log('OTP expires at:', new Date(expiredTime).toISOString());
-  console.log('Time difference (minutes):', (expiredTime - now) / 1000 / 60);
-  
   if (expiredTime < now) {
     return next(new AppError("OTP has expired", 400));
   }
