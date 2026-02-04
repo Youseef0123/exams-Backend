@@ -196,7 +196,11 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
             wrongAnswers,
             timeTaken,
             timeLimit:quiz.timeLimit,
-            subjects: quiz.subjects
+            subjects: quiz.subjects,
+            scoreAsFraction: `${correctCount}/${totalQuestions}`,
+            totalQuestions,
+            correctAnswersCount: correctCount,
+            wrongAnswersCount: wrongAnswers.length
         }
     })
 
