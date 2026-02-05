@@ -68,10 +68,18 @@ export const startQuizForStudent = catchAsyncError(async(req,res,next)=>{
         quiz.questions=JSON.parse(quiz.questions);
     }
 
-    // Add id to questions if not present
+    // Add id to questions if not present and convert boolean values to strings
     quiz.questions.forEach((q, index) => {
         if (!q.id) {
             q.id = index + 1;
+        }
+        // Convert correctAnswer to string if it's boolean
+        if (typeof q.correctAnswer === 'boolean') {
+            q.correctAnswer = String(q.correctAnswer);
+        }
+        // Convert options to strings if they are boolean
+        if (q.options && Array.isArray(q.options)) {
+            q.options = q.options.map(opt => typeof opt === 'boolean' ? String(opt) : opt);
         }
     });
 
@@ -132,10 +140,18 @@ export const submitQuiz=catchAsyncError(async(req,res,next)=>{
         questions=JSON.parse(questions);
     }
 
-    // Add id to questions if not present
+    // Add id to questions if not present and convert boolean values to strings
     questions.forEach((q, index) => {
         if (!q.id) {
             q.id = index + 1;
+        }
+        // Convert correctAnswer to string if it's boolean
+        if (typeof q.correctAnswer === 'boolean') {
+            q.correctAnswer = String(q.correctAnswer);
+        }
+        // Convert options to strings if they are boolean
+        if (q.options && Array.isArray(q.options)) {
+            q.options = q.options.map(opt => typeof opt === 'boolean' ? String(opt) : opt);
         }
     });
 
