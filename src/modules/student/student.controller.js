@@ -56,13 +56,13 @@ export const startQuizForStudent = catchAsyncError(async(req,res,next)=>{
     }
 
     // Check if student has already attempted this quiz
-    // const existingAttempt = await QuizAttemptSchema.findOne({
-    //     where: { quizId: req.params.quizId, userId: req.user.id }
-    // });
+    const existingAttempt = await QuizAttemptSchema.findOne({
+        where: { quizId: req.params.quizId, userId: req.user.id }
+    });
 
-    // if (existingAttempt) {
-    //     return next(new AppError('You have already attempted this quiz. You can only take it once.', 400));
-    // }
+    if (existingAttempt) {
+        return next(new AppError('You have already attempted this quiz. You can only take it once.', 400));
+    }
 
     if(typeof quiz.questions==='string'){
         quiz.questions=JSON.parse(quiz.questions);
