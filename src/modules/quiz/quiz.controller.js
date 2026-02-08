@@ -1,4 +1,5 @@
 import QuizSchema from "../../../db/models/quiz.js";
+import QuizAttemptSchema from "../../../db/models/quiz_attempt.js";
 import AppError from "../../utils/AppError.js";
 import catchAsyncError from "../../handlers/handelAsyncError.js";
 import { QUIZ_CATEGORIES } from "../../utils/quizCategories.js";
@@ -136,6 +137,13 @@ export const deleteQuiz = catchAsyncError(async(req,res,next)=>{
   if(!quiz){
     return next(new AppError('No quiz found with that ID or not owned by you', 404));
   }
+
+  // Delete all associated quiz attempts first
+  await QuizAttemptSchema.destroy({
+    where: {
+      quizId: req.params.id
+    }
+  });
 
   await quiz.destroy();
   res.status(200).json({
